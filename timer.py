@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 
 
 class Timer_Application(Frame):
@@ -17,14 +18,17 @@ class Timer_Application(Frame):
 
     def app_interface(self):
         self.hours = Entry(self.upperframe, width = 5, font = "Helvetica 46 bold", justify = "center", bg = "lavender")
+        self.hours.insert(END, self.hrs)
         self.hours.grid(row = 0, column = 0, ipady = 47)
         self.colon_button1 = Button(self.upperframe, text = ':', width = 1, height = 4, font = "Helvetica 24", fg = "black", bg = "LightPink1", relief = SUNKEN)
         self.colon_button1.grid(row = 0, column = 1)
         self.minutes = Entry(self.upperframe, width = 5, font = "Helvetica 46 bold", justify = "center", bg = "lavender")
+        self.minutes.insert(END, self.mins)
         self.minutes.grid(row = 0, column = 2, ipady = 47)
         self.colon_button2 = Button(self.upperframe, text = ':', width = 1, height = 4, font = "Helvetica 24", fg = "black", bg = "LightPink1", relief = SUNKEN)
         self.colon_button2.grid(row = 0, column = 3)
         self.seconds = Entry(self.upperframe, width = 5, font = "Helvetica 46 bold", justify = "center", bg = "lavender")
+        self.seconds.insert(END, self.secs)
         self.seconds.grid(row = 0, column = 4, ipady = 47)        
         self.button_start = Button(self.bottomframe, text = 'Start', width = 25, font = "Calibri 33 bold", fg = "black", bg = "orange", command = lambda: self.start_timer())
         self.button_start.pack(pady = 5)
@@ -39,6 +43,7 @@ class Timer_Application(Frame):
                 if self.mins <= 0:
                     if self.secs <= 0:
                         self.running = False
+                        messagebox.showinfo("Information", "Time's Up!") 
                     else:
                         self.seconds.delete(0, END)
                         self.secs -= 1
@@ -88,24 +93,26 @@ class Timer_Application(Frame):
                     self.secs -= 1
                     self.seconds.insert(10, self.secs)
                     self.after(1000, self.calculate)
-        else:
-            print("Time's Up")
 
     def start_timer(self):
-        self.hrs = int(self.hours.get())
-        self.mins = int(self.minutes.get())
-        self.secs = int(self.seconds.get())
-        self.button_start['state'] = 'disabled'
-        self.button_stop['state'] = 'normal'
-        self.button_reset['state'] = 'normal'
+        try:
+            self.hrs = int(self.hours.get())
+            self.mins = int(self.minutes.get())
+            self.secs = int(self.seconds.get())
+        except ValueError:
+            messagebox.showwarning("Warning", "Invalid Input")
+            return
         h = self.hrs <= 23 and self.hrs >= 0
         m = self.mins <= 59 and self.mins >= 0
         s = self.secs <= 59 and self.mins >= 0
         self.running = True
         if h and m and s:
+            self.button_start['state'] = 'disabled'
+            self.button_stop['state'] = 'normal'
+            self.button_reset['state'] = 'normal'
             self.after(990, self.calculate)
         else:
-            print("Invalid Input")
+            messagebox.showwarning("Warning", "Invalid Input")  
 
     def stop_timer(self):
         self.button_start['state'] = 'normal'
