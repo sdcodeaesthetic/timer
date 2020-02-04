@@ -55,7 +55,10 @@ class Timer_Application(Frame):
                 if self.mins <= 0:
                     if self.secs <= 0:
                         self.running = False
-                        messagebox.showinfo("Information", "Time's Up!") 
+                        messagebox.showinfo("Information", "Time's Up!")
+                        self.button_start['state'] = 'normal'
+                        self.button_stop['state'] = 'disabled'
+                        self.button_reset['state'] = 'disabled'
                     else:
                         self.seconds.delete(0, END)
                         self.secs -= 1
